@@ -26,7 +26,7 @@ public class GymLogAdapter extends ListAdapter<GymLog, GymLogViewHolder> {
 
         @Override
         public boolean areItemsTheSame(@NonNull GymLog oldItem, @NonNull GymLog newItem) {
-            return oldItem == newItem;
+            return oldItem.getId().equals(newItem.getId());
         }
 
         @Override

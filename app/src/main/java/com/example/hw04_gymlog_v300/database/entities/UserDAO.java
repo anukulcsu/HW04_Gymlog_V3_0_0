@@ -13,20 +13,20 @@ import java.util.List;
 public interface UserDAO {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(User... user);
+    void insert(User... users);
 
     @Delete
     void delete(User user);
 
-    @Query("DELETE FROM " + AppDataBase.USER_TABLE)
+    @Query("DELETE FROM " + AppDatabase.USER_TABLE)
     void deleteAll();
 
-    @Query("SELECT * FROM " + AppDataBase.USER_TABLE + " ORDER BY username")
+    @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " ORDER BY username ASC")
     LiveData<List<User>> getAllUsers();
 
-    @Query("SELECT * FROM " + AppDataBase.USER_TABLE + " WHERE username = :username")
+    @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " WHERE username = :username")
     LiveData<User> getUserByUsername(String username);
 
-    @Query("SELECT * FROM " + AppDataBase.USER_TABLE + " WHERE id = :userId")
-    LiveData<User> getUserByUserId(int userId);
+    @Query("SELECT * FROM " + AppDatabase.USER_TABLE + " WHERE id = :userId")
+    LiveData<User> getUserById(int userId);
 }

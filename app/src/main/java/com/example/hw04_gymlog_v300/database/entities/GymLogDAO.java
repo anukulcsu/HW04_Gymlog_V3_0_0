@@ -12,10 +12,15 @@ import java.util.List;
 
 @Dao
 public interface GymLogDAO {
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(GymLog gymLog);
 
-    @Query("SELECT * FROM " + AppDataBase.GYM_LOG_TABLE + " WHERE userId = :loggedInUserId ORDER BY date DESC")
-    LiveData<List<GymLog>> getRecordsByUserId(int loggedInUserId);
+    @Query("SELECT * FROM " + AppDatabase.GYM_LOG_TABLE + " ORDER BY date DESC")
+    List<GymLog> getAllRecords();
+
+    @Query("SELECT * FROM " + AppDatabase.GYM_LOG_TABLE + " WHERE userId = :loggedInUserId ORDER BY date DESC")
+    List<GymLog> getRecordsByUserId(int loggedInUserId);
+
+    @Query("SELECT * FROM " + AppDatabase.GYM_LOG_TABLE + " WHERE userId = :loggedInUserId ORDER BY date DESC")
+    LiveData<List<GymLog>> getRecordsByUserIdLiveData(int loggedInUserId);
 }

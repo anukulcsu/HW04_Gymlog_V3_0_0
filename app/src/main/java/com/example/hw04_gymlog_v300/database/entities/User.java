@@ -5,11 +5,12 @@ import androidx.room.PrimaryKey;
 
 import java.util.Objects;
 
-@Entity(tableName = AppDataBase.USER_TABLE)
+@Entity(tableName = AppDatabase.USER_TABLE)
 public class User {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
+
     private String username;
     private String password;
     private boolean isAdmin;

@@ -10,20 +10,21 @@ import com.example.hw04_gymlog_v300.database.entities.GymLogRepository;
 
 import java.util.List;
 
+
 public class GymLogViewModel extends AndroidViewModel {
 
-    private final GymLogRepository repository;
+    private GymLogRepository mRepository;
 
     public GymLogViewModel(Application application) {
         super(application);
-        repository = GymLogRepository.getRepository(application);
+        mRepository = GymLogRepository.getRepository(application);
     }
 
-    public LiveData<List<GymLog>> getAllLogsById(int userId) {
-        return repository.getAllLogsByUserIdLiveData(userId);
+    public LiveData<List<GymLog>> getAllLogsByUserId(int userId) {
+        return mRepository.getAllLogsByUserIdLiveData(userId);
     }
 
     public void insert(GymLog gymLog) {
-        repository.insertGymLog(gymLog);
+        mRepository.insert(gymLog);
     }
 }

@@ -5,66 +5,92 @@ import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
+import com.example.hw04_gymlog_v300.MainActivity;
 import com.example.hw04_gymlog_v300.database.GymLogDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class GymLogRepository {
-    private final GymLogDAO mGymLogDao;
-    private final UserDAO mUserDao;
-    private static volatile GymLogRepository repository;
+
+    private final GymLogDAO mGymLogDAO;
+    private final UserDAO mUserDAO;
+    private static GymLogRepository repository;
 
     private GymLogRepository(Application application) {
-        AppDataBase db = AppDataBase.getDatabase(application);
-        mGymLogDao = db.gymLogDao();
-        mUserDao = db.userDAO();
+        AppDatabase db = AppDatabase.getDatabase(application);
+        mGymLogDAO = db.gymLogDAO();
+        mUserDAO = db.userDAO();
     }
 
-    public static GymLogRepository getRepository(final Application application) {
+    public static GymLogRepository getRepository(Application application) {
         if (repository != null) {
             return repository;
         }
-        Future<GymLogRepository> future = AppDataBase.databaseWriteExecutor.submit(
+
+        Future<GymLogRepository> future = AppDatabase.databaseWriteExecutor.submit(
                 new Callable<GymLogRepository>() {
                     @Override
                     public GymLogRepository call() throws Exception {
-                        repository = new GymLogRepository(application);
-                        return repository;
+                        return new GymLogRepository(application);
                     }
                 }
         );
+
         try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            Log.d(MainActivity.TAG, "Problem getting Gym log repository. thread error");
+            repository = future.get();
+            return repository;
+        } catch (ExecutionException | InterruptedException e) {
+            Log.d(MainActivity.TAG, "Problem getting GymLog repository.");
+            e.printStackTrace();
         }
         return null;
     }
 
-    public void insertGymLog(GymLog gymLog) {
-        AppDataBase.databaseWriteExecutor.execute(() -> {
-            mGymLogDao.insert(gymLog);
+
+    public void insert(GymLog gymLog) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            mGymLogDAO.insert(gymLog);
         });
     }
 
-    public void insertUser(User... user) {
-        AppDataBase.databaseWriteExecutor.execute(() -> {
-            mUserDao.insert(user);
+    public void insert(User... users) {
+        AppDatabase.databaseWriteExecutor.execute(() -> {
+            mUserDAO.insert(users);
         });
-    }
-
-    public LiveData<List<GymLog>> getAllLogsByUserIdLiveData(int loggedInUserId) {
-        return mGymLogDao.getRecordsByUserId(loggedInUserId);
     }
 
     public LiveData<User> getUserByUsername(String username) {
-        return mUserDao.getUserByUsername(username);
+        return mUserDAO.getUserByUsername(username);
     }
 
-    public LiveData<User> getUserByUserId(int userId) {
-        return mUserDao.getUserByUserId(userId);
+    public LiveData<User> getUserById(int userId) {
+        return mUserDAO.getUserById(userId);
+    }
+
+    public ArrayList<GymLog> getAllLogsByUserId(int loggedInUserId) {
+        Future<List<GymLog>> future = AppDatabase.databaseWriteExecutor.submit(
+                new Callable<List<GymLog>>() {
+                    @Override
+                    public List<GymLog> call() throws Exception {
+                        return mGymLogDAO.getRecordsByUserId(loggedInUserId);
+                    }
+                }
+        );
+
+        try {
+            return new ArrayList<>(future.get());
+        } catch (ExecutionException | InterruptedException e) {
+            Log.e(MainActivity.TAG, "Problem when getting all gym logs by user", e);
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public LiveData<List<GymLog>> getAllLogsByUserIdLiveData(int userId) {
+        return mGymLogDAO.getRecordsByUserIdLiveData(userId);
     }
 }

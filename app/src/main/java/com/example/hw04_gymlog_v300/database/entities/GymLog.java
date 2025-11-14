@@ -6,39 +6,53 @@ import com.example.hw04_gymlog_v300.database.AppDataBase;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-@Entity(tableName = AppDataBase.GYM_LOG_TABLE)
+@Entity(tableName = AppDatabase.GYM_LOG_TABLE)
 public class GymLog {
 
     @PrimaryKey(autoGenerate = true)
-    private int id;
+    private Integer id;
+
     private String exercise;
     private double weight;
     private int reps;
     private LocalDateTime date;
     private int userId;
 
-    public GymLog(String exercise, double weight, int reps, int userId) {
+    public GymLog(String exercise, int reps, double weight, int userId) {
         this.exercise = exercise;
-        this.weight = weight;
         this.reps = reps;
+        this.weight = weight;
         this.userId = userId;
-        this.date = LocalDateTime.now();
+        date = LocalDateTime.now();
     }
 
     @Override
     public String toString() {
-        return exercise + '\n' +
-                "Weight: " + weight + '\n' +
-                "Reps: " + reps + '\n' +
-                "Date: " + date.toString() + '\n' +
-                "=-=-=-=-=-=-=-=\n";
+        return exercise + "\n" +
+                "Weight: " + weight + "\n" +
+                "Reps: " + reps + "\n" +
+                "Date: " + date.toString() + "\n" +
+                "====================\n";
     }
 
-    public int getId() {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        GymLog gymLog = (GymLog) o;
+        return Double.compare(weight, gymLog.weight) == 0 && reps == gymLog.reps && userId == gymLog.userId && Objects.equals(id, gymLog.id) && Objects.equals(exercise, gymLog.exercise) && Objects.equals(date, gymLog.date);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, exercise, weight, reps, date, userId);
+    }
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -80,18 +94,5 @@ public class GymLog {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GymLog gymLog = (GymLog) o;
-        return id == gymLog.id && Double.compare(weight, gymLog.weight) == 0 && reps == gymLog.reps && userId == gymLog.userId && Objects.equals(exercise, gymLog.exercise) && Objects.equals(date, gymLog.date);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, exercise, weight, reps, date, userId);
     }
 }

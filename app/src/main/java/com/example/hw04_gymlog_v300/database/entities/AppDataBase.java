@@ -15,28 +15,29 @@ import com.example.hw04_gymlog_v300.database.GymLogDAO;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@Database(entities = {GymLog.class, User.class}, version = 4, exportSchema = false)
 @TypeConverters({LocalDateTypeConverter.class})
-public abstract class AppDataBase extends RoomDatabase {
+@Database(entities = {GymLog.class, User.class}, version = 3, exportSchema = false)
+public abstract class AppDatabase extends RoomDatabase {
 
-    public static final String GYM_LOG_TABLE = "gymLogTable";
-    public static final String USER_TABLE = "userTable";
     public static final String DATABASE_NAME = "gym_log_database";
+    public static final String GYM_LOG_TABLE = "gym_log_table";
+    public static final String USER_TABLE = "user_table";
 
-    public abstract GymLogDAO gymLogDao();
-    public abstract UserDAO userDAO();
+    private static volatile AppDatabase INSTANCE;
 
-    private static volatile AppDataBase INSTANCE;
     private static final int NUMBER_OF_THREADS = 4;
     static final ExecutorService databaseWriteExecutor =
             Executors.newFixedThreadPool(NUMBER_OF_THREADS);
 
-    static AppDataBase getDatabase(final Context context) {
+    public abstract GymLogDAO gymLogDAO();
+    public abstract UserDAO userDAO();
+
+    public static AppDatabase getDatabase(final Context context) {
         if (INSTANCE == null) {
-            synchronized (AppDataBase.class) {
+            synchronized (AppDatabase.class) {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
-                                    AppDataBase.class, DATABASE_NAME)
+                                    AppDatabase.class, DATABASE_NAME)
                             .fallbackToDestructiveMigration()
                             .addCallback(addDefaultValues)
                             .build();
@@ -51,16 +52,18 @@ public abstract class AppDataBase extends RoomDatabase {
         public void onCreate(@NonNull SupportSQLiteDatabase db) {
             super.onCreate(db);
             databaseWriteExecutor.execute(() -> {
-                Log.i(MainActivity.TAG, "DATABASE CREATED");
+                Log.i(MainActivity.TAG, "Database created");
+
                 UserDAO dao = INSTANCE.userDAO();
+
                 dao.deleteAll();
 
                 User admin = new User("admin1", "admin1");
                 admin.setAdmin(true);
+                dao.insert(admin);
 
                 User testUser = new User("testuser1", "testuser1");
-
-                dao.insert(admin, testUser);
+                dao.insert(testUser);
             });
         }
     };
