@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".LoginActivity">
+
+    <Button
+        android:id="@+id/login_button"
+        android:layout_width="match_parent"
+        android:layout_height="105dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="44dp"
+        android:text="LOGIN"
+        android:textSize="32sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/password_login_edit_text" />
+
+    <TextView
+        android:id="@+id/title_login_text_view"
+        android:layout_width="379dp"
+        android:layout_height="99dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="16dp"
+
+        android:gravity="center"
+
+        android:text="Welcome to the GymLog please sign in"
+        android:textSize="36sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <EditText
+        android:id="@+id/username_login_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:hint="Username"
+        android:inputType="text"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_login_text_view" />
+
+    <EditText
+        android:id="@+id/password_login_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:layout_margin="16dp"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.562"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/username_login_edit_text" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
