@@ -13,7 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.hw04_gymlog_v300.database.GymLogRepository;
 import com.example.hw04_gymlog_v300.database.entities.GymLog;
 import com.example.hw04_gymlog_v300.database.entities.User;
@@ -126,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        // FIXED: Must call super.onPrepareOptionsMenu, NOT openOptionsMenu
         return super.onPrepareOptionsMenu(menu);
     }
 
